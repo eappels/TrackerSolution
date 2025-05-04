@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Tracker.Views.PermissionsDeniedView"
+             Title="PermissionsDeniedView">
+    <Grid RowDefinitions="*,50,50,*">
+        <Label Text="Please allow location tracking When using the app"
+               Grid.Row="1"
+               HorizontalTextAlignment="Center"/>
+        <Label Text="in the settings of iPhone and restart the app"
+               Grid.Row="2"
+               HorizontalTextAlignment="Center" />
+    </Grid>
+</ContentPage>
