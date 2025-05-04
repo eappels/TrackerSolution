@@ -27,7 +27,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<ILocationService, LocationService>();
 
         builder.Services.AddSingleton<MainViewModel>();
-        builder.Services.AddSingleton<MainView>(s => new MainView()
+        builder.Services.AddTransient<MainView>(s => new MainView()
         {
             BindingContext = s.GetRequiredService<MainViewModel>()
         });
