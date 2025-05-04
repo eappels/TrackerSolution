@@ -37,7 +37,7 @@ public partial class MainViewModel : ObservableObject
         status = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
         if (status != PermissionStatus.Granted)
             App.Current.MainPage = new NavigationPage(new PermissionsDeniedView());
-                
+
         this.locationService.OnLocationUpdate += OnLocationUpdate;
         this.locationService.StartTracking(0);        
     }
