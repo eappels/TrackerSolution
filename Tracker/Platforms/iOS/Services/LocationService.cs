@@ -14,11 +14,12 @@ public partial class LocationService
         locationManager.PausesLocationUpdatesAutomatically = false;
         locationManager.DesiredAccuracy = CLLocation.AccuracyBestForNavigation;
         locationManager.AllowsBackgroundLocationUpdates = true;
-        locationManager.ActivityType = CLActivityType.AutomotiveNavigation;
+        locationManager.ActivityType = CLActivityType.AutomotiveNavigation;        
     }
 
     partial void StartTrackingInternal(double distanceFilter)
     {
+        locationManager.DistanceFilter = distanceFilter;
         locationManager.LocationsUpdated += (object sender, CLLocationsUpdatedEventArgs e) =>
             OnLocationUpdate?.Invoke(new CustomLocation(e.Locations.LastOrDefault().Coordinate.Latitude, e.Locations.LastOrDefault().Coordinate.Longitude));
 

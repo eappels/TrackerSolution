@@ -12,16 +12,18 @@ public partial class MainViewModel : ObservableObject
 {
 
     private readonly ILocationService locationService;
+    private readonly IDBService dbService;
 
-    public MainViewModel(ILocationService locationService)
+    public MainViewModel(ILocationService locationService, IDBService dbService)
     {
+        DistanceInMeters = 500;
         Track = new Polyline
         {
             StrokeColor = Colors.Blue,
             StrokeWidth = 5
         };
-
         this.locationService = locationService;
+        this.dbService = dbService;
     }
 
     public async Task CheckPermissions()
@@ -30,24 +32,35 @@ public partial class MainViewModel : ObservableObject
         status = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
         if (status == PermissionStatus.Granted)
         {
-            this.locationService.OnLocationUpdate += OnLocationUpdate;
-            this.locationService.StartTracking(0);
+            await OnPermissionsGranted();
             return;
         }
         status = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
         if (status != PermissionStatus.Granted)
-            App.Current.MainPage = new NavigationPage(new PermissionsDeniedView());
-
-        this.locationService.OnLocationUpdate += OnLocationUpdate;
-        this.locationService.StartTracking(0);        
+            App.Current.MainPage.Navigation.PushAsync(new PermissionsDeniedView());
+        await OnPermissionsGranted();
     }
 
-    private void OnLocationUpdate(CustomLocation customLocation)
+    private async Task OnPermissionsGranted()
     {
-        WeakReferenceMessenger.Default.Send(new LocationUpdatedMessage(customLocation));
+        this.locationService.OnLocationUpdate += OnLocationUpdate;
+        this.locationService.StartTracking(DistanceInMeters);
+        var list = await dbService.GetAll();
+        foreach (var item in list)
+            Track.Add(new Location(item.Latitude, item.Longitude));        
+    }
+
+    private async void OnLocationUpdate(CustomLocation customLocation)
+    {       
         Track.Add(new Location(customLocation.Latitude, customLocation.Longitude));
+        WeakReferenceMessenger.Default.Send(new LocationUpdatedMessage(customLocation));        
+        var returnData = 0;
+        returnData = await dbService.Save(customLocation);
     }
 
     [ObservableProperty]
     private Polyline track;
+
+    [ObservableProperty]
+    private double distanceInMeters;
 }

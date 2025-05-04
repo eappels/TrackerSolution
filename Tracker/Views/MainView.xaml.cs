@@ -9,14 +9,13 @@ public partial class MainView : ContentPage, IDisposable
 {
 
     private Distance mapDistance;
-    private Location OldLocation;
 
-    public MainView(MainViewModel viewModel)
+    public MainView()
 	{
 		InitializeComponent();
-        BindingContext = viewModel;
+
         mapDistance = Distance.FromKilometers(0.2);
-        MyMap.MapElements.Add(viewModel.Track);
+        MyMap.MapElements.Add(((MainViewModel)BindingContext).Track);
         MyMap.PropertyChanging += (s, e) =>
         {
             if (e.PropertyName == nameof(Map.VisibleRegion))
@@ -30,15 +29,8 @@ public partial class MainView : ContentPage, IDisposable
         WeakReferenceMessenger.Default.Register<LocationUpdatedMessage>(this, (r, m) =>
         {
             var location = new Location(m.Value.Latitude, m.Value.Longitude);
-            if (OldLocation != null) 
-            {
-                var distance = location.CalculateDistance(OldLocation, DistanceUnits.Kilometers);
-                if (distance < 100)
-                    return;
-            }
             MapSpan mapSpan = MapSpan.FromCenterAndRadius(location, mapDistance);
             MyMap.MoveToRegion(mapSpan);
-            OldLocation = location;
         });
     }
 
