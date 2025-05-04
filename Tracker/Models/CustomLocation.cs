@@ -17,4 +17,9 @@ public class CustomLocation
         Longitude = longitude;
         Timestamp = DateTime.Now;
     }
+
+    public override string ToString()
+    {
+        return $"{Latitude} {Longitude} {Timestamp}";
+    }
 }

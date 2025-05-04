@@ -23,10 +23,14 @@ public static class MauiProgram
 		builder.Logging.AddDebug();
 #endif
 
+        builder.Services.AddSingleton<IDBService, DBService>();
         builder.Services.AddSingleton<ILocationService, LocationService>();
 
         builder.Services.AddSingleton<MainViewModel>();
-        builder.Services.AddSingleton<MainView>();
+        builder.Services.AddSingleton<MainView>(s => new MainView()
+        {
+            BindingContext = s.GetRequiredService<MainViewModel>()
+        });
 
         return builder.Build();
     }
