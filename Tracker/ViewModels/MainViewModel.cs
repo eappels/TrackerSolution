@@ -63,4 +63,9 @@ public partial class MainViewModel : ObservableObject
 
     [ObservableProperty]
     private double distanceInMeters;
+
+    //partial void OnDistanceInMetersChanged(double oldValue, double newValue)
+    //{
+    //    throw new NotImplementedException();
+    //}
 }

@@ -15,7 +15,7 @@ public partial class MainView : ContentPage, IDisposable
 	{
 		InitializeComponent();
 
-        mapDistance = Distance.FromKilometers(0.5);
+        mapDistance = Distance.FromMeters(((MainViewModel)BindingContext).DistanceInMeters);
 
         WeakReferenceMessenger.Default.Register<LocationUpdatedMessage>(this, (r, m) =>
         {
